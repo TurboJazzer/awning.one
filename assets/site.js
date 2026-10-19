@@ -25,8 +25,7 @@
         });
       }
     };
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) { video.muted = true; video.pause(); playBtn.setAttribute('aria-pressed','true'); $('play-label').textContent = 'Play video'; }
+    var reduced = false; // video always plays; the Pause button is the visitor's control
     video.addEventListener('loadeddata', function () { if (video.paused && playBtn.getAttribute('aria-pressed') !== 'true') start(); });
     if (!reduced) start();
     var firstGesture = function (e) {
