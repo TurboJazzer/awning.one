@@ -6,6 +6,11 @@
   /* ---- Hero video: pause/play and sound ---- */
   var video = $('hero-video'), playBtn = $('play-btn'), soundBtn = $('sound-btn');
   if (video && playBtn && soundBtn) {
+    // Visitors who ask their device for less motion get the picture paused, with a Play button, not a hidden video.
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      video.removeAttribute('autoplay'); video.pause();
+      playBtn.setAttribute('aria-pressed', 'true'); $('play-label').textContent = 'Play video';
+    }
     playBtn.addEventListener('click', function () {
       var paused = playBtn.getAttribute('aria-pressed') !== 'true';
       if (paused) video.pause(); else { var p = video.play(); if (p && p.catch) p.catch(function () {}); }

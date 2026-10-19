@@ -14,7 +14,7 @@ body{margin:0;background:#F4EDE0}
 .unroll{animation:unroll 1.3s cubic-bezier(.22,.8,.24,1) both}
 .rise{animation:rise .8s .8s ease both}
 .rise2{animation:rise .8s 1s ease both}
-@media (prefers-reduced-motion:reduce){.unroll,.rise,.rise2{animation:none}.herovid,.soundbtn{display:none}}
+@media (prefers-reduced-motion:reduce){.unroll,.rise,.rise2{animation:none}}
 a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #E9A23B;outline-offset:3px}
 .stage:focus-within{outline:3px solid #E9A23B;outline-offset:4px}
 .nav a:hover{text-decoration:underline}
