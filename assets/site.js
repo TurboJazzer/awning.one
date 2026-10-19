@@ -6,11 +6,36 @@
   /* ---- Hero video: pause/play and sound ---- */
   var video = $('hero-video'), playBtn = $('play-btn'), soundBtn = $('sound-btn');
   if (video && playBtn && soundBtn) {
-    // Visitors who ask their device for less motion get the picture paused, with a Play button, not a hidden video.
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      video.removeAttribute('autoplay'); video.pause();
-      playBtn.setAttribute('aria-pressed', 'true'); $('play-label').textContent = 'Play video';
-    }
+    // Try to start with sound. Browsers only allow that when the visitor has already shown they want it
+    // (earlier visits, a click, a home-screen install). If it is refused, start muted, then switch the sound on
+    // with the first tap or key press anywhere on the page.
+    var soundOn = function (on) {
+      soundBtn.setAttribute('aria-pressed', String(on));
+      $('sound-label').textContent = on ? 'Turn sound off' : 'Turn sound on';
+    };
+    var userChoseSound = false;
+    var start = function () {
+      if (playBtn.getAttribute('aria-pressed') === 'true') return;
+      video.muted = false; video.volume = 0.7;
+      var p = video.play();
+      if (p && p.then) {
+        p.then(function () { soundOn(!video.muted); }).catch(function () {
+          video.muted = true; soundOn(false);
+          var q = video.play(); if (q && q.catch) q.catch(function () {});
+        });
+      }
+    };
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) { video.muted = true; video.pause(); playBtn.setAttribute('aria-pressed','true'); $('play-label').textContent = 'Play video'; }
+    video.addEventListener('loadeddata', function () { if (video.paused && playBtn.getAttribute('aria-pressed') !== 'true') start(); });
+    if (!reduced) start();
+    var firstGesture = function (e) {
+      if (userChoseSound || !video.muted || playBtn.getAttribute('aria-pressed') === 'true') return;
+      if (e.target && e.target.closest && e.target.closest('#play-btn, #sound-btn')) return;
+      video.muted = false; video.volume = 0.7; soundOn(true);
+      var p = video.play(); if (p && p.catch) p.catch(function () {});
+    };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, firstGesture, { once: false, passive: true }); });
     playBtn.addEventListener('click', function () {
       var paused = playBtn.getAttribute('aria-pressed') !== 'true';
       if (paused) video.pause(); else { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
@@ -18,6 +43,7 @@
       $('play-label').textContent = paused ? 'Play video' : 'Pause video';
     });
     soundBtn.addEventListener('click', function () {
+      userChoseSound = true;
       var on = soundBtn.getAttribute('aria-pressed') !== 'true';
       video.muted = !on;
       if (on) { video.volume = 0.7; var p = video.play(); if (p && p.catch) p.catch(function () {}); }
