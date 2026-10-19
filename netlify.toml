@@ -6,6 +6,10 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+[[edge_functions]]
+  function = "block-bots"
+  path = ["/", "/*.html", "/robots.txt", "/llms.txt", "/sitemap.xml", "/api/*"]
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"

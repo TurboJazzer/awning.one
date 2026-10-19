@@ -31,3 +31,6 @@ This folder is the whole site. Deploy it to Netlify from a Git repository or wit
 
 ## Content to replace
 The before/after slider uses a built-in sample, not a real client site. Swap it for real work once you have it.
+
+## Bot blocking (edge function)
+`netlify/edge-functions/block-bots.js` is the same file as on wayneconrad.com (your upload, unchanged). It is registered in netlify.toml for the home page, .html pages, robots.txt, llms.txt, sitemap.xml and /api/*. Blocks MJ12bot, DotBot, PetalBot, Bytespider, Scrapy and fake Googlebot/Bingbot; all other AI crawlers are welcome. Logs appear in Netlify under Logs and metrics, Edge Functions, block-bots (search "[ai-bot]" or "[other-bot]"). `assets/block-bots.js` is a separate client-side script that protects the forms.
