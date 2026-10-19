@@ -27,8 +27,21 @@
       '; path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
   }
 
+  var CLARITY_ID = 'z03vj963iv';       // Microsoft Clarity project ID
+  var clarityLoaded = false;
+  function loadClarity() {
+    if (clarityLoaded || !CLARITY_ID) return;
+    clarityLoaded = true;
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', CLARITY_ID);
+  }
+
   var loaded = false;
   function loadAnalytics() {
+    loadClarity();
     if (loaded || !GTM_ID || GTM_ID.indexOf('XXXX') !== -1) return;
     loaded = true;
     window.dataLayer = window.dataLayer || [];
@@ -43,7 +56,7 @@
     var host = location.hostname.replace(/^www\./, '');
     document.cookie.split('; ').forEach(function (c) {
       var name = c.split('=')[0];
-      if (/^(_ga|_gid|_gat|_gcl)/.test(name)) {
+      if (/^(_ga|_gid|_gat|_gcl|_clck|_clsk|CLID|ANONCID|MUID|SM)$|^(_ga|_gid|_gat|_gcl)/.test(name)) {
         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
         document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + host;
       }

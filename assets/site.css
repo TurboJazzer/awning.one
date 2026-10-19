@@ -20,7 +20,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
 .nav a:hover{text-decoration:underline}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .nav a{min-height:44px;display:inline-flex;align-items:center}
-@media (max-width:760px){.nav>div>a[href="#packages"],.nav>div>a[href="#process"],.nav>div>a[href="#faq"]{display:none}.nav>div{flex-wrap:nowrap!important;gap:12px 20px!important}.nav>a:first-child span{font-size:30px!important}}
+@media (max-width:760px){.nav>div>a[href="#work"],.nav>div>a[href="#packages"],.nav>div>a[href="#process"],.nav>div>a[href="#faq"]{display:none}.nav>div{flex-wrap:nowrap!important;gap:12px 20px!important}.nav>a:first-child span{font-size:30px!important}}
 summary{cursor:pointer;list-style:none}
 summary::-webkit-details-marker{display:none}
 details[open] .plus{transform:rotate(45deg)}
