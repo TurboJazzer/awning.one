@@ -1,5 +1,7 @@
 /* Awning site behaviour: hero video controls, before/after slider, live scorecard. No tracking here. */
 (function () {
+  function track(name, params) { try { window.dataLayer = window.dataLayer || []; var o = { event: name }; for (var k in (params || {})) o[k] = params[k]; window.dataLayer.push(o); } catch (e) {} }
+  document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a'); if (!a) return; var h = a.getAttribute('href') || ''; if (/calendly\.com|zoom\.us/.test(h)) track('call_click', { link: /zoom/.test(h) ? 'zoom' : 'calendly' }); else if (/^tel:/.test(h)) track('phone_click'); else if (/^mailto:/.test(h)) track('email_click'); });
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
 
@@ -115,6 +117,7 @@
     }).finally(function () { btn.disabled = false; btn.textContent = 'Score my site'; });
   });
   function render(r, url, speedMissing) {
+    track('scorecard_run', { score: r.total });
     try { $('r-url').textContent = new URL(url).hostname; } catch (e) { $('r-url').textContent = url; }
     $('r-total').textContent = r.total === null ? 'n/a' : r.total;
     $('r-band').textContent = r.total === null ? 'Could not check' : 'out of 100 · ' + r.band;
@@ -144,7 +147,7 @@
       var d = fields(repForm); d.url = lastUrl || $('url').value; d.consent = true;
       var b = $('rep-btn'); b.disabled = true;
       post('/.netlify/functions/report-background', d).then(function (j) {
-        if (j.__status === 202 || j.__status === 200) { msg('Done. Your full report is on its way to ' + email + '. It can take a couple of minutes. Check your junk folder if you do not see it.', false); repForm.reset(); }
+        if (j.__status === 202 || j.__status === 200) { msg('Done. Your full report is on its way to ' + email + '. It can take a couple of minutes. Check your junk folder if you do not see it.', false); repForm.reset(); track('report_requested'); var nx = $('rep-next'); if (nx) nx.hidden = false; }
         else if (j.__status === 429) msg('You have asked for this report a few times already. Please check your inbox or try again tomorrow.', true);
         else msg('Something went wrong. Please try again, or email hello@awning.one.', true);
       }).catch(function () { msg('Something went wrong. Please try again, or email hello@awning.one.', true); }).finally(function () { b.disabled = false; });

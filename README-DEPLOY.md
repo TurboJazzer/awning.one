@@ -7,7 +7,9 @@ This folder is the whole site. Deploy it to Netlify from a Git repository or wit
 |---|---|---|
 | `RESEND_API_KEY` | Yes | Sends the scorecard report and the lead notice. Resend is already set up on the awning.one domain. |
 | `PAGESPEED_API_KEY` | Strongly advised | Google PageSpeed Insights key (free in Google Cloud). Without it Google limits requests and the speed score may be skipped. |
-| `HUBSPOT_TOKEN` | Optional | HubSpot private app token (contacts write). If unset, leads are only emailed. |
+| `AIRTABLE_TOKEN` | Optional | Airtable personal access token with `data.records:write` on the Awning Leads base. If unset, leads are only emailed. |
+| `AIRTABLE_BASE_ID` | Optional | `appucKQUC5ZiaMpZ1` (the Awning Leads base). |
+| `AIRTABLE_TABLE` | Optional | Table name, default `Leads`. |
 | `NOTIFY_TO` | Optional | Where lead notices go. Default `hello@awning.one`. |
 | `REPORT_FROM` | Optional | Sender. Default `Awning <hello@awning.one>`. |
 | `DAILY_CAP` | Optional | Daily cap on scorecard runs per function instance. Default 500. |

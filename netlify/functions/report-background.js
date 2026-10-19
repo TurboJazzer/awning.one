@@ -2,7 +2,7 @@
 /* POST /api/report  (Netlify background function: replies 202 at once, then works for up to 15 minutes)
    Body: { url, name, email, consent, company_website, _loaded_at }
    Runs every check, emails the visitor the full report through Resend, tells hello@awning.one about the lead,
-   and (if HUBSPOT_TOKEN is set) adds the contact to HubSpot. Environment variables: see README-DEPLOY.md */
+   and (if AIRTABLE_TOKEN and AIRTABLE_BASE_ID are set) saves the lead in Airtable. Environment variables: see README-DEPLOY.md */
 const { botCheck, normaliseUrl, limited, ipOf } = require('./_lib');
 const { pageChecks, speedChecks } = require('./_audit');
 const { compose } = require('../../assets/compose.js');
@@ -49,6 +49,7 @@ exports.handler = async (event) => {
   const email = String(b.email || '').trim(), name = String(b.name || '').trim().slice(0, 80);
   if (!u || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 200 || !name || b.consent !== true) return { statusCode: 400 };
   if (limited(ipOf(event), 'report|' + email.toLowerCase())) return { statusCode: 429 };
+  let score = null;
   try {
     const [p, s] = await Promise.all([pageChecks(u), speedChecks(u)]);
     if (p.error) {
@@ -57,15 +58,21 @@ exports.handler = async (event) => {
     } else {
       const checks = [...p.checks, ...s.checks];
       const r = compose(checks);
+      score = typeof r.total === 'number' ? Math.round(r.total) : null;
       const when = new Date().toISOString().slice(0, 10);
       await resend({ from: FROM, to: [email], reply_to: NOTIFY, subject: `Your website scorecard: ${r.total === null ? 'result' : r.total + ' out of 100'}`, html: reportHtml(name, u.hostname, r, checks, when) });
     }
     await resend({ from: FROM, to: [NOTIFY], reply_to: email, subject: 'New scorecard lead: ' + u.hostname,
       html: `<p>${esc(name)} (${esc(email)}) asked for the full report on ${esc(u.href)}. Consent to email: yes.</p>` });
-    if (process.env.HUBSPOT_TOKEN) {
-      await fetch('https://api.hubapi.com/crm/v3/objects/contacts', { method: 'POST',
-        headers: { Authorization: 'Bearer ' + process.env.HUBSPOT_TOKEN, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ properties: { email, firstname: name, website: u.href } }) }).catch(() => {});
+    // Save the lead in Airtable. Never lets a failure stop the report: errors are only logged.
+    if (process.env.AIRTABLE_TOKEN && process.env.AIRTABLE_BASE_ID) {
+      try {
+        const res = await fetch('https://api.airtable.com/v0/' + process.env.AIRTABLE_BASE_ID + '/' + encodeURIComponent(process.env.AIRTABLE_TABLE || 'Leads'), {
+          method: 'POST', headers: { Authorization: 'Bearer ' + process.env.AIRTABLE_TOKEN, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ typecast: true, records: [{ fields: { Email: email, Name: name, Website: u.href, Source: 'Scorecard report',
+            Score: score, 'Consent to email': true, Status: 'New', Created: new Date().toISOString() } }] }) });
+        if (!res.ok) console.log('airtable failed:', res.status, (await res.text()).slice(0, 200));
+      } catch (e) { console.log('airtable failed:', e.message); }
     }
   } catch (e) { console.log('report failed:', e.message); }
   return { statusCode: 202 };
