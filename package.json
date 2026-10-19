@@ -1,0 +1,8 @@
+{
+  "name": "awning-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "awning.one static site with Netlify functions",
+  "engines": { "node": ">=18" },
+  "scripts": { "build": "node notify-indexnow.js" }
+}
