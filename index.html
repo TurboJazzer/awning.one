@@ -94,8 +94,29 @@
 </div>
 </div>
 
-<div id="top" style="padding:20px 0 72px;text-align:center">
-<div class="rise">
+<div id="top" style="padding:12px 0 56px;text-align:left">
+<style>
+.hs{position:relative;width:min(1360px,calc(100vw - 48px));left:50%;transform:translateX(-50%);margin:10px 0 40px;border-radius:22px;overflow:hidden;background:#0b1424;box-shadow:0 40px 90px -30px rgba(0,0,0,.8),0 0 0 1px rgba(244,237,224,.18)}
+.hs .vframe{position:relative;aspect-ratio:16/9;max-height:calc(100vh - 205px);min-height:460px;width:100%;overflow:hidden}
+.hs-grad{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(10,18,34,.92) 0,rgba(10,18,34,.62) 30%,rgba(10,18,34,0) 62%),linear-gradient(90deg,rgba(10,18,34,.5),rgba(10,18,34,0) 55%)}
+.hs-text{position:absolute;left:clamp(24px,4vw,56px);right:24px;bottom:clamp(22px,3.4vw,46px);z-index:4;text-align:left}
+.hs-text h1{margin:0 0 10px!important;max-width:11em!important;font-size:clamp(36px,4.6vw,68px)!important}
+.hs-text p{margin:0 0 16px!important;max-width:31em!important}
+.hs-text div[style*="flex"]{justify-content:flex-start!important}
+@media(max-width:760px){.hs{width:100%;left:0;transform:none;border-radius:0;margin:6px 0 32px}.hs .vframe{min-height:0;max-height:none}.hs-grad{display:none}.hs-text{position:static;padding:22px 20px 26px;background:#101A2E}.hs-text h1{max-width:none!important}.hs .soundbtn{padding:8px 12px!important;font-size:11px!important;left:auto}.hs #play-btn{left:10px!important;top:10px!important}.hs #sound-btn{right:10px!important;top:10px!important}}
+</style><div class="hs">
+<div class="vframe">
+<video class="herovid" id="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/hero-poster.webp" aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">
+<source src="assets/hero.mp4" type="video/mp4">
+<source src="assets/hero.webm" type="video/webm">
+</video>
+<div class="hs-grad"></div>
+<button type="button" class="soundbtn" aria-label="Pause or play the background video" id="play-btn" aria-pressed="false" style="position:absolute;z-index:5;left:20px;top:20px;display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.06em;color:#F4EDE0;background:rgba(16,26,46,.78);border:1.5px solid #F4EDE0;border-radius:999px;padding:10px 16px;cursor:pointer"><span id="play-label">Pause video</span></button>
+<button type="button" class="soundbtn" id="sound-btn" aria-pressed="false" style="position:absolute;z-index:5;right:20px;top:20px;display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.06em;color:#F4EDE0;background:rgba(16,26,46,.78);border:1.5px solid #F4EDE0;border-radius:999px;padding:10px 16px;cursor:pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4EDE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>
+<span id="sound-label">Turn sound on</span>
+</button>
+</div><div class="hs-text">
 <h1 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(38px,4.4vw,62px);line-height:1;letter-spacing:-.02em;margin:0 auto 12px;max-width:16em">Open for business, <em style="color:#E9A23B">online.</em></h1>
 <p style="font-size:18px;line-height:1.5;color:#C9CFDC;max-width:44em;margin:0 auto 18px">Awning builds the website that works as your front door. Sharp to look at, wired to capture leads and book calls, and set up so you can get on with the work.</p>
 <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
@@ -103,22 +124,7 @@
 <a href="#scorecard" style="color:#F4EDE0;text-decoration:none;font-weight:600;padding:14px 24px;border-radius:999px;border:2px solid #F4EDE0">Score my site</a>
 </div>
 <div style="font-family:'DM Mono',monospace;font-size:13px;color:#B9C0D0;margin:12px 0 0">Free call. No paid audit step.</div>
-</div>
-
-<div style="margin:22px auto 0;max-width:1120px">
-<div class="vframe" style="position:relative;aspect-ratio:16/9;border-radius:20px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(0,0,0,.75),0 0 0 1px rgba(244,237,224,.18)">
-<video class="herovid" id="hero-video" autoplay loop playsinline preload="auto" poster="assets/hero-poster.webp" aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover">
-<source src="assets/hero.webm" type="video/webm">
-<source src="assets/hero.mp4" type="video/mp4">
-</video>
-<div style="position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(180deg,rgba(10,18,34,0),rgba(10,18,34,.55))"></div>
-<button type="button" class="soundbtn" aria-label="Pause or play the background video" id="play-btn" aria-pressed="false" style="position:absolute;z-index:5;left:20px;bottom:20px;display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.06em;color:#F4EDE0;background:rgba(16,26,46,.78);border:1.5px solid #F4EDE0;border-radius:999px;padding:10px 16px;cursor:pointer"><span id="play-label">Pause video</span></button>
-<button type="button" class="soundbtn" id="sound-btn" aria-pressed="false" style="position:absolute;z-index:5;right:20px;bottom:20px;display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.06em;color:#F4EDE0;background:rgba(16,26,46,.78);border:1.5px solid #F4EDE0;border-radius:999px;padding:10px 16px;cursor:pointer">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4EDE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>
-<span id="sound-label">Turn sound on</span>
-</button>
-</div>
-</div>
+</div></div>
 
 <div class="rise2" style="max-width:1120px;margin:44px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px 40px;text-align:left">
 <div style="border-top:2px solid #E9A23B;padding:16px 0 0"><div style="font-family:'Instrument Serif',Georgia,serif;font-size:28px;line-height:1.1;margin:0 0 8px">Found by search and AI</div><div style="font-size:16px;color:#C9CFDC;max-width:22em">Set up so Google and AI tools can read and quote you.</div></div><div style="border-top:2px solid #E9A23B;padding:16px 0 0"><div style="font-family:'Instrument Serif',Georgia,serif;font-size:28px;line-height:1.1;margin:0 0 8px">Leads that email you</div><div style="font-size:16px;color:#C9CFDC;max-width:22em">Forms and downloads that notify you the moment someone asks.</div></div><div style="border-top:2px solid #E9A23B;padding:16px 0 0"><div style="font-family:'Instrument Serif',Georgia,serif;font-size:28px;line-height:1.1;margin:0 0 8px">Booking on the page</div><div style="font-size:16px;color:#C9CFDC;max-width:22em">A calendar, so a visitor becomes a booked call.</div></div>

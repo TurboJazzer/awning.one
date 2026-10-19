@@ -14,19 +14,25 @@
       $('sound-label').textContent = on ? 'Turn sound off' : 'Turn sound on';
     };
     var userChoseSound = false;
-    var start = function () {
-      if (playBtn.getAttribute('aria-pressed') === 'true') return;
+    // Motion first: always start muted (every browser allows it), then try to switch the sound on.
+    var tryUnmute = function () {
+      if (userChoseSound || playBtn.getAttribute('aria-pressed') === 'true') return;
       video.muted = false; video.volume = 0.7;
-      var p = video.play();
-      if (p && p.then) {
-        p.then(function () { soundOn(!video.muted); }).catch(function () {
+      setTimeout(function () {
+        if (video.paused && playBtn.getAttribute('aria-pressed') !== 'true') {
           video.muted = true; soundOn(false);
           var q = video.play(); if (q && q.catch) q.catch(function () {});
-        });
-      }
+        } else { soundOn(!video.muted); }
+      }, 400);
+    };
+    var start = function () {
+      if (playBtn.getAttribute('aria-pressed') === 'true') return;
+      video.muted = true; soundOn(false);
+      var p = video.play();
+      if (p && p.then) { p.then(tryUnmute).catch(function () {}); } else { tryUnmute(); }
     };
     var reduced = false; // video always plays; the Pause button is the visitor's control
-    video.addEventListener('loadeddata', function () { if (video.paused && playBtn.getAttribute('aria-pressed') !== 'true') start(); });
+    video.addEventListener('loadeddata', function () { if (video.paused && playBtn.getAttribute('aria-pressed') !== 'true') { video.muted = true; var r = video.play(); if (r && r.catch) r.catch(function () {}); } });
     if (!reduced) start();
     var firstGesture = function (e) {
       if (userChoseSound || !video.muted || playBtn.getAttribute('aria-pressed') === 'true') return;
