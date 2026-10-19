@@ -2,6 +2,10 @@
   publish = "."
   command = "node notify-indexnow.js"
 
+[build.environment]
+  # These values (the public contact address and an Airtable base ID) are not secrets, and the contact address is printed on the site.
+  SECRETS_SCAN_OMIT_KEYS = "NOTIFY_TO,REPORT_FROM,AIRTABLE_BASE_ID"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
