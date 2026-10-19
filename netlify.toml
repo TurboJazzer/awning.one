@@ -8,7 +8,27 @@
 
 [[edge_functions]]
   function = "block-bots"
-  path = ["/", "/*.html", "/robots.txt", "/llms.txt", "/sitemap.xml", "/api/*"]
+  path = "/"
+
+[[edge_functions]]
+  function = "block-bots"
+  path = "/*.html"
+
+[[edge_functions]]
+  function = "block-bots"
+  path = "/robots.txt"
+
+[[edge_functions]]
+  function = "block-bots"
+  path = "/llms.txt"
+
+[[edge_functions]]
+  function = "block-bots"
+  path = "/sitemap.xml"
+
+[[edge_functions]]
+  function = "block-bots"
+  path = "/api/*"
 
 [[redirects]]
   from = "/api/*"
