@@ -1,11 +1,11 @@
-// Deliberate bot blocking, reviewed 6 October 2026. AI-bot visit logging added 18 October 2026.
+// Deliberate bot blocking, reviewed 6 October 2026. AI-bot visit logging added 18 October 2026, trimmed 20 October 2026.
 // Blocked: MJ12bot, DotBot, PetalBot, Bytespider (ByteDance, the one AI crawler we don't allow) and Scrapy,
 // plus anything claiming to be Googlebot or Bingbot that fails reverse-DNS verification.
 // Do NOT add rules blocking GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-SearchBot, Claude-User,
 // PerplexityBot, Perplexity-User, Google-Extended, Applebot or Meta's crawlers. They are welcome (see robots.txt).
 //
 // Logging: every visit from a known AI crawler or AI agent writes one JSON line to the Netlify edge function
-// log, starting with "[ai-bot]". Unrecognised bots write "[other-bot]". Human visitors are never logged.
+// log, starting with "[ai-bot]". No IP address is recorded. Other bots and human visitors are never logged.
 // Find them in Netlify: Logs and metrics, Edge Functions, function "block-bots", search for "[ai-bot]".
 
 const verifiedIpCache = new Map();
@@ -74,17 +74,15 @@ function logVisit(request, context, response) {
 
   const ai = AI_BOTS.find(([re]) => re.test(ua));
   const generic = /bot|crawl|spider|scrape|fetch|agent|headless|python-requests|axios|node-fetch|go-http-client/i.test(ua);
-  if (!ai && !generic) return; // a person: never logged
+  if (!ai) return; // only known AI crawlers are logged; people and other bots never are
 
   const other = ai ? null : OTHER_BOTS.find(([re]) => re.test(ua));
-  const ip = context.ip || request.headers.get("x-nf-client-connection-ip") || "";
   const line = {
     bot: ai ? ai[1] : (other ? other[1] : "unknown"),
     purpose: ai ? ai[2] : (other ? other[2] : "unknown"),
     method: request.method,
     path,
     status: response ? response.status : 0,
-    ip,
     ua: ua.slice(0, 200)
   };
   console.log((ai ? "[ai-bot] " : "[other-bot] ") + JSON.stringify(line));

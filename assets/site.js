@@ -33,7 +33,15 @@
       var p = video.play();
       if (p && p.then) { p.then(tryUnmute).catch(function () {}); } else { tryUnmute(); }
     };
-    var reduced = false; // video always plays; the Pause button is the visitor's control
+    // Phones get a lighter clip; nothing downloads until this script decides.
+    if (window.matchMedia && window.matchMedia('(max-width:760px)').matches) {
+      while (video.firstChild) video.removeChild(video.firstChild);
+      var ms = document.createElement('source'); ms.src = 'assets/hero-mobile.mp4'; ms.type = 'video/mp4'; video.appendChild(ms);
+    }
+    video.preload = 'auto'; video.load();
+    // Respect the visitor's reduced-motion setting: show the still picture, let them press Play.
+    var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (reduced) { playBtn.setAttribute('aria-pressed', 'true'); $('play-label').textContent = 'Play video'; }
     video.addEventListener('loadeddata', function () { if (video.paused && playBtn.getAttribute('aria-pressed') !== 'true') { video.muted = true; var r = video.play(); if (r && r.catch) r.catch(function () {}); } });
     if (!reduced) start();
     var firstGesture = function (e) {
@@ -57,6 +65,14 @@
       soundBtn.setAttribute('aria-pressed', String(on));
       $('sound-label').textContent = on ? 'Turn sound off' : 'Turn sound on';
     });
+  }
+
+  /* ---- Mobile menu: close after a choice ---- */
+  var mnav = document.querySelector('.mnav');
+  if (mnav) mnav.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a')) mnav.removeAttribute('open'); });
+  if (mnav) {
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mnav.open) { mnav.removeAttribute('open'); var sm = mnav.querySelector('summary'); if (sm) sm.focus(); } });
+    document.addEventListener('click', function (e) { if (mnav.open && !mnav.contains(e.target)) mnav.removeAttribute('open'); });
   }
 
   /* ---- Before / after slider ---- */

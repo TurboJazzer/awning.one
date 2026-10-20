@@ -68,6 +68,7 @@
     if (v === 'accepted') loadAnalytics(); else clearAnalyticsCookies();
     var b = document.getElementById('awning-cookie-banner');
     if (b) b.remove();
+    document.body.style.paddingBottom = '';
   }
 
   function showBanner() {
@@ -77,21 +78,24 @@
     b.setAttribute('role', 'dialog');
     b.setAttribute('aria-label', 'Cookie choices');
     var sm = window.innerWidth < 600;
-    b.style.cssText = 'position:fixed;left:' + (sm ? 8 : 16) + 'px;right:' + (sm ? 8 : 16) + 'px;bottom:' + (sm ? 8 : 16) + 'px;z-index:9999;max-width:640px;margin:0 auto;' +
-      'background:#101A2E;color:#F4EDE0;border:1px solid #33405C;border-radius:16px;padding:' + (sm ? '10px 14px' : '20px 22px') + ';' +
-      'box-shadow:0 20px 50px -20px rgba(0,0,0,.6);font:' + (sm ? 14 : 16) + 'px/1.4 "Hanken Grotesk",system-ui,sans-serif';
+    var wide = window.innerWidth >= 1000; // wide screens: small card in the bottom-right corner, clear of the hero buttons
+    b.style.cssText = 'position:fixed;left:' + (wide ? 'auto' : (sm ? 8 : 16) + 'px') + ';right:' + (sm ? 8 : 16) + 'px;bottom:' + (sm ? 8 : 12) + 'px;z-index:9999;max-width:' + (sm ? 'none' : (wide ? '400px' : '900px')) + ';margin:' + (wide ? '0' : '0 auto') + ';' +
+      'display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:' + (sm ? '8px 12px' : '10px 20px') + ';' +
+      'background:#101A2E;color:#F4EDE0;border:1px solid #33405C;border-radius:14px;padding:' + (sm ? '10px 12px' : '10px 18px') + ';' +
+      'box-shadow:0 14px 36px -16px rgba(0,0,0,.7);font:' + (sm ? 13 : 15) + 'px/1.35 "Hanken Grotesk",system-ui,sans-serif';
     b.innerHTML =
-      '<p style="margin:0 0 ' + (sm ? 8 : 14) + 'px">We use analytics cookies to see how the site is used, only if you agree. ' +
-      'The site works fully either way. <a href="/privacy.html" style="color:#E9A23B">Privacy notice</a></p>' +
-      '<div style="display:flex;flex-wrap:wrap;gap:10px">' +
-      '<button type="button" data-c="accepted" style="font:inherit;font-weight:600;padding:' + (sm ? 9 : 11) + 'px 18px;border-radius:999px;border:0;background:#E9A23B;color:#101A2E;cursor:pointer">Accept analytics</button>' +
-      '<button type="button" data-c="rejected" style="font:inherit;font-weight:600;padding:' + (sm ? 7 : 9) + 'px 18px;border-radius:999px;border:2px solid #F4EDE0;background:transparent;color:#F4EDE0;cursor:pointer">Reject</button>' +
+      '<p style="margin:0;flex:1 1 ' + (sm || wide ? '100%' : '320px') + '">Analytics cookies only if you agree. The site works fully either way. ' +
+      '<a href="/privacy.html" style="color:#E9A23B">Privacy notice</a></p>' +
+      '<div style="display:flex;gap:10px;flex:0 0 auto">' +
+      '<button type="button" data-c="accepted" style="font:inherit;font-weight:600;min-height:44px;padding:0 18px;border-radius:999px;border:0;background:#E9A23B;color:#101A2E;cursor:pointer">Accept</button>' +
+      '<button type="button" data-c="rejected" style="font:inherit;font-weight:600;min-height:44px;padding:0 18px;border-radius:999px;border:2px solid #F4EDE0;background:transparent;color:#F4EDE0;cursor:pointer">Reject</button>' +
       '</div>';
     b.addEventListener('click', function (e) {
       var v = e.target && e.target.getAttribute && e.target.getAttribute('data-c');
       if (v) choose(v);
     });
     document.body.appendChild(b);
+    document.body.style.paddingBottom = (b.offsetHeight + 24) + 'px';
   }
 
   function init() {
