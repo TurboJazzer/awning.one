@@ -24,7 +24,7 @@ console.log('IndexNow: submitting ' + urlList.length + ' URLs.');
 const data = JSON.stringify({
   host: HOST,
   key: "6d04a7f1675f4bb8bd3de4fd5c1eccb1",
-  keyLocation: "https://awning.one/eb5acb56022a4e48bccc11b101f34ce0.txt",
+  keyLocation: "https://awning.one/674d15a6c923493b86195aad3cfc1885.txt",
   urlList
 });
 
